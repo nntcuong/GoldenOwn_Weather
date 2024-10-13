@@ -35,6 +35,10 @@ npm install
 composer install
 npm run build
 php artisan migrate
+```
+Run simultaneously.
+```
+npm run dev
 php artisan serve
 ```
 Notes
