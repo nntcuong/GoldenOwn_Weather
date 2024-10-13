@@ -4,7 +4,7 @@
 
 ## Demo
 
-![Demo][(link_to_your_demo_image)](https://youtu.be/K8Ck7L5kA7w) <!-- Add your demo image link here -->
+![Demo][(link_demo)](https://youtu.be/K8Ck7L5kA7w) <!-- Add your demo image link here -->
 
 ## Instructions to Run
 
