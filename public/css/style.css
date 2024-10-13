@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css?family=Tangerine');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', 'sans-serif';
+}
+body{
+    background: #E3F2FD;;
+}
+h1{
+    color:#fff;
+    padding: 18px 0;
+    text-align: center;
+    font-size:1.75rem;
+    background: #5372F0;
+}
+.main-content{
+    display: flex;
+    gap: 35px;
+    padding: 30px;
+}
+.search-card{
+    width: 550px;
+}
+.search-card input{
+    width: 100%;
+    height: 46px;
+    outline: none;
+    padding: 0 15px;
+    margin: 10px 0 20px 0;
+    font-size: 1.07rem;
+    border-radius: 4px;
+    border:1px solid #ccc;
+}
+.search-card .separator{
+    height: 1px;
+    width: 100%;
+    margin: 25px 0;
+    background: #bbb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.search-card .separator::before{
+    content: "or";
+    color: #6C757D;
+    font-size: 1.18rem;
+    padding: 0 15px;
+    margin-top:-4px;
+    background:#E3F2FD;
+}
+.search-card button{
+    width: 100%;
+    padding: 10px 0;
+    cursor:pointer;
+    outline: node;
+    border:none;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 4px;
+    background: #5372F0;
+}
+.search-card .location-btn{
+    background: #6C757D;
+}
+.weather-info{
+    width: 100%;
+}
+.current-weather{
+    color:#fff;
+    display: flex;
+    border-radius: 5px;
+    padding: 20px 70px 20px 20px;
+    background: #5372F0;
+    justify-content:  space-between;
+}
+.current-weather h2{
+    font-size: 1.7rem;
+}
+.weather-info h4{
+    margin-top: 12px;
+
+    font-size: 1rem;
+    font-weight: 500;
+}
+.current-weather .icon img{
+
+    max-width: 120px;
+    margin-top:-15px;
+}
+.current-weather .icon h4{
+    margin-top:-10px;
+    text-transform: capitalize;
+}
+.forecast h2{
+    font-size: 1.5rem;
+    margin: 20px 0;
+}
+.weather-cards{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Tạo 4 cột có kích thước bằng nhau */
+    gap: 20px; /* Khoảng cách giữa các thẻ */
+}
+.weather-cards .card{
+    list-style: none;
+    color: #fff;
+    padding: 18px 16px;
+    border-radius: 5px;
+    background: #6C757D;
+}
+
+/* Ẩn các thẻ div từ 5 trở đi */
+.weather-cards .card:nth-child(n+5) {
+    display: none;
+}
+
+/* Hiển thị tất cả các thẻ khi nút "See More" được nhấn */
+.weather-cards.show-all .card {
+    display: block;
+}
+
+.weather-cards .card img{
+    max-width: 70px;
+    margin: 5px 0 -12px 0;
+}
+.see-more-container {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.see-more-btn {
+    padding: 0.5rem 1rem;
+    background-color: #4263f5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.see-more-btn:hover {
+    background-color: #f54842;
+}
+.historyWeather{
+    margin-top: 15px;
+}
+#weather-log {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: none; /* Ban đầu ẩn */
+}
+
+.weather-log-entry {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.weather-log-entry h4 {
+    margin: 0 0 5px;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.weather-log-entry p {
+    margin: 5px 0;
+    color: #666;
+}
