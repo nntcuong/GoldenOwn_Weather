@@ -12,85 +12,65 @@ class WeatherController extends Controller
 {
 
     public function index(Request $request)
-{
-    $weatherResponse = [];
-    $futureResponse = [];
-    $weatherCurrentResponse = [];
-
-    $apiKey = env('WEATHER_API_KEY');
-
-    if ($request->isMethod("post")) {
-        if ($request->has('city')) {
-
-            $cityName = $request->city;
-
-            $cacheKey = $cityName . '_' . Carbon::now()->format('Y-m-d');
-
-            // Xóa cache cũ nếu tồn tại
-            if (Cache::has($cacheKey)) {
-                Cache::forget($cacheKey);
+    {
+        $weatherResponse = [];
+        $futureResponse = [];
+        $apiKey = env('WEATHER_API_KEY');
+    
+        if ($request->isMethod("post")) {
+            if ($request->has('city')) {
+                $cityName = $request->city;
+    
+                $responseCurrent = Http::get("https://api.weatherapi.com/v1/current.json", [
+                    'key' => $apiKey,
+                    'q' => $cityName
+                ]);
+                $weatherResponse = $responseCurrent->json();
+    
+                // Kiểm tra nếu không có dữ liệu trả về
+                if (!isset($weatherResponse['location'])) {
+                    return redirect()->back()->withErrors(['error' => 'City not found or invalid.']);
+                }
+    
+                $days = "14";
+                $responseFuture = Http::get("https://api.weatherapi.com/v1/forecast.json", [
+                    'key' => $apiKey,
+                    'q' => $cityName,
+                    'days' => $days
+                ]);
+                $futureResponse = $responseFuture->json();
+            } elseif ($request->has('latitude') && $request->has('longitude')) {
+                $latitude = $request->latitude;
+                $longitude = $request->longitude;
+                $q = $latitude . ',' . $longitude;
+    
+                $responseCurrent = Http::get("https://api.weatherapi.com/v1/current.json", [
+                    'key' => $apiKey,
+                    'q' => $q
+                ]);
+                $weatherResponse = $responseCurrent->json();
+    
+                // Kiểm tra nếu không có dữ liệu trả về
+                if (!isset($weatherResponse['location'])) {
+                    return redirect()->back()->withErrors(['error' => 'Location not found or invalid.']);
+                }
+    
+                $days = "14";
+                $responseFuture = Http::get("https://api.weatherapi.com/v1/forecast.json", [
+                    'key' => $apiKey,
+                    'q' => $weatherResponse['location']['name'],
+                    'days' => $days
+                ]);
+                $futureResponse = $responseFuture->json();
             }
-
-            $responseCurrent = Http::get("https://api.weatherapi.com/v1/current.json", [
-                'key' => $apiKey,
-                'q' => $cityName
-            ]);
-            $weatherResponse = $responseCurrent->json();
-
-            $days = "14";
-            $responseFuture = Http::get("https://api.weatherapi.com/v1/forecast.json", [
-                'key' => $apiKey,
-                'q' => $cityName,
-                'days' => $days
-            ]);
-            $futureResponse = $responseFuture->json();
-
-            Cache::put($cacheKey, [
-                'current' => $weatherResponse,
-                'forecast' => $futureResponse,
-            ], now()->endOfDay());
-
-        } elseif ($request->has('latitude') && $request->has('longitude')) {
-
-            $latitude = $request->latitude;
-            $longitude = $request->longitude;
-
-            $q = $latitude . ',' . $longitude;
-
-            $cacheKey = $q . '_' . Carbon::now()->format('Y-m-d');
-
-            // Xóa cache cũ nếu tồn tại
-            if (Cache::has($cacheKey)) {
-                Cache::forget($cacheKey);
-            }
-
-            $responseCurrent = Http::get("https://api.weatherapi.com/v1/current.json", [
-                'key' => $apiKey,
-                'q' => $q
-            ]);
-            $weatherResponse = $responseCurrent->json();
-            $cityName = $weatherResponse['location']['name'];
-
-            $days = "14";
-            $responseFuture = Http::get("https://api.weatherapi.com/v1/forecast.json", [
-                'key' => $apiKey,
-                'q' => $cityName,
-                'days' => $days
-            ]);
-            $futureResponse = $responseFuture->json();
-
-            Cache::put($cacheKey, [
-                'current' => $weatherResponse,
-                'forecast' => $futureResponse,
-            ], now()->endOfDay());
         }
+    
+        return view('weather', [
+            'data' => $weatherResponse,
+            'dataFuture' => $futureResponse
+        ]);
     }
-
-    return view('weather', [
-        'data' => $weatherResponse,
-        'dataFuture' => $futureResponse
-    ]);
-}
+    
 
 
     public function getWeatherHistory(Request $request)

@@ -88,7 +88,7 @@ h1{
 .current-weather .icon img{
 
     max-width: 120px;
-    margin-top:-15px;
+    margin-top:15px;
 }
 .current-weather .icon h4{
     margin-top:-10px;

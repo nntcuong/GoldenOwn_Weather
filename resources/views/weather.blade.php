@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather Dashboard</title>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-
 </head>
 
 <body>
@@ -14,6 +13,11 @@
     <div class="main-content">
         <div class="search-card">
             <h3>Enter City Name</h3>
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    {{ $errors->first() }}
+                </div>
+            @endif
             <form action="{{ route('weather.form') }}" method="post">
                 @csrf
                 <input type="text" name="city" id="city" placeholder="E.g., New York, London, Tokyo">
@@ -24,13 +28,12 @@
                 @csrf
                 <input type="hidden" name="latitude" id="latitude">
                 <input type="hidden" name="longitude" id="longitude">
-                <button class="location-btn" onclick="getLocation()">Use Current Location</button>
+                <button type="button" class="location-btn" onclick="getLocation()">Use Current Location</button>
             </form>
 
             <button class="historyWeather" id="dashboard-btn">Receive daily weather forecast information</button>
             <button class="historyWeather" onclick="showWeatherLog()">Show History Weather</button>
             <div id="weather-log" style="display: none;"></div>
-
         </div>
 
         <div class="weather-info">
@@ -69,9 +72,9 @@
                 </div>
                 <div class="icon">
                     @if (isset($data['current']['condition']['icon']))
-                        <img src="{{ asset($data['current']['condition']['icon']) }}" alt="weather-icon" class="weather-icon">
+                        <img src="{{ asset($data['current']['condition']['icon']) }}" >
                     @endif
-                    <h4 class="weather-text">
+                    <h4 >
                         @if (isset($data['current']['condition']['text']))
                             {{ $data['current']['condition']['text'] }}
                         @endif
@@ -134,24 +137,39 @@
 
     <script>
         document.getElementById('dashboard-btn').addEventListener('click', function() {
-  
             @if (Auth::check())
-                window.location.href = "{{ route('dashboard') }}"; 
+                window.location.href = "{{ route('dashboard') }}";
             @else
-                window.location.href = "{{ route('login') }}"; p
+                window.location.href = "{{ route('login') }}";
             @endif
         });
 
         function getLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
+                navigator.geolocation.getCurrentPosition(showPosition, handleError);
             } else {
                 alert("Geolocation is not supported by this browser.");
             }
         }
 
+        function handleError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    alert("Permission denied. Please enable location services to use this feature.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    alert("Location information is unavailable.");
+                    break;
+                case error.TIMEOUT:
+                    alert("The request to get user location timed out.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    alert("An unknown error occurred.");
+                    break;
+            }
+        }
+
         function showPosition(position) {
-     
             document.getElementById('latitude').value = position.coords.latitude;
             document.getElementById('longitude').value = position.coords.longitude;
 
@@ -193,20 +211,19 @@
         @endif
 
         function showWeatherLog() {
-    const logDiv = document.getElementById('weather-log');
-    const logData = JSON.parse(localStorage.getItem('weatherLog')) || [];
+            const logDiv = document.getElementById('weather-log');
+            const logData = JSON.parse(localStorage.getItem('weatherLog')) || [];
 
-    logDiv.innerHTML = logData.map(log => `
-        <div class="weather-log-entry">
-            <h4>${log.city}</h4>
-            <p>Temperature: <strong>${log.temp}°C</strong></p>
-            <p>Date: <strong>${log.date}</strong></p>
-        </div>
-    `).join('');
+            logDiv.innerHTML = logData.map(log => `
+                <div class="weather-log-entry">
+                    <h4>${log.city}</h4>
+                    <p>Temperature: <strong>${log.temp}°C</strong></p>
+                    <p>Date: <strong>${log.date}</strong></p>
+                </div>
+            `).join('');
 
-    logDiv.style.display = logDiv.style.display === 'none' ? 'block' : 'none';
-}
-
+            logDiv.style.display = logDiv.style.display === 'none' ? 'block' : 'none';
+        }
     </script>
 </body>
 
