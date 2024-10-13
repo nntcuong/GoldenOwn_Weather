@@ -27,14 +27,22 @@ MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS="hello@example.com"
 MAIL_FROM_NAME="${APP_NAME}"
 WEATHER_API_KEY=
+```
 ### Step 2: Run the Application
 Execute the following commands in order:
+```
 npm install
 composer install
 npm run build
 php artisan migrate
 php artisan serve
+```
 Notes
-Database: Weather Database Repository
-To send daily weather notification emails to registered users, use the command
+ - Database: Weather Database Repository
+ - To send daily weather notification emails to registered users, use the command:
+```
 php artisan users:sendmail
+
+```
+
+
