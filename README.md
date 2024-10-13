@@ -42,7 +42,7 @@ npm run dev
 php artisan serve
 ```
 Notes
- - Database: Weather Database Repository
+ - Database: [Weather Database Repository](https://github.com/nntcuong/Weather_db)
  - To send daily weather notification emails to registered users, use the command:
 ```
 php artisan users:sendmail
